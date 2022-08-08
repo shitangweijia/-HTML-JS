@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"> 
+<title></title>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+		text-decoration: none;
+		list-style: none;
+	}
+		
+	#banner{
+		width: 800px;
+		height: 400px;
+		border: 2px solid #999;
+		overflow: hidden;
+		position: relative;
+		user-select: none;
+	}
+	#imglist{
+		width: 4000px;
+		height: 400px;
+	}
+	#imglist img{
+		width: 800px;
+		height: 400px;
+	}
+	#imglist li{
+		float: left;
+	}
+	.prev{
+		background-color: #00aa7f;
+		width: 30px;
+		height: 40px;
+		color: #fff;
+		text-align: center;
+		line-height: 40px;
+		position: absolute;
+		left: 5px;
+		top: 45%;
+		cursor: pointer;
+		border-radius: 35%;
+		user-select: none;
+	}
+	.next{
+		background-color: #00aa7f;
+		width: 30px;
+		height: 40px;
+		color: #fff;
+		text-align: center;
+		line-height: 40px;
+		position: absolute;
+		right: 5px;
+		top: 45%;
+		cursor: pointer;
+		border-radius: 35%;
+		user-select: none;
+	}
+	#icolist{
+		position: absolute;
+		right: 10px;
+		bottom: 10px;
+		user-select: none;
+	}
+	#icolist li{
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		background-color: #666;
+		text-align: center;
+		color: #fff;
+		line-height: 30px;
+		float: left;
+		margin-left: 5px;
+		cursor: pointer;
+		user-select: none;
+	}
+</style>
+</head>
+<body>
+	<div id="banner">
+		<ul id="imglist">
+			<li><img src="https://cipherch.com/wp-content/uploads/2022/07/master_the_organising_skills.thumb_.1000.1000.png" alt=""></li>
+			<li><img src="https://cipherch.com/wp-content/uploads/2022/07/HomeApplianceAssessment_en.thumb_.1000.1000.png" alt=""></li>
+			<li><img src="https://cipherch.com/wp-content/uploads/2022/07/Stir_fry_the_authentic_Asian_way_with_an_Induction_Cooker.thumb_.1000.1000.png" alt=""></li>
+			<li><img src="https://cipherch.com/wp-content/uploads/2022/07/Decode_the_energy_label_to_find_the_most_energy_saving_electrical_appliances.thumb_.1000.1000.png" alt=""></li>
+			<li><img src="https://cipherch.com/wp-content/uploads/2022/07/master_the_organising_skills.thumb_.1000.1000.png" alt=""></li>
+		</ul>
+		<ul id="icolist">
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ul>
+		<div class="prev">《</div>
+		<div class="next">》</div>
+	</div>
+	<script>
+		var eprev = document.querySelector('.prev');/* 选择出来的元素及元素数组是静态的，然而getelement这种方法选择出来的元素的动态的 */
+		var enext = document.querySelector('.next');
+		var esico = document.getElementById('icolist').getElementsByTagName('li');/* 获取esico元素组，组里有四个元素 */
+		var eicolist = document.querySelector('#icolist');		/* 获取圆点列表元素 */
+		var eimglist = document.querySelector('#imglist');		/*获取图片列表元素  */
+		var left = 0;
+		var timer;
+		run();
+		function run(){
+			if (left <= -3200) {
+				left = 0;
+			}				/* 如果滚动完，重置left的值  left变成0 */
+			var m = Math.floor(-left / 800); /* 创建变量m获取当前图片序号*/
+			imglist.style.marginLeft = left + 'px';
+			var n = (left % 800 == 0) ? n = 1200 : n = 10;/* 添加变量n，滚完一张图停1200毫秒 */
+			left -= 10;
+			timer = setTimeout(run,n); /* 每十毫秒运行一次，每次偏移left累计-10.*/
+			icochange(m);		/* 在run函数调用icochange进行小圆点变化 */
+		}
+		//我们做一个定位到指定图片的函数imgchange
+		function imgchange(n){
+			let lt = - (n * 800);
+			imglist.style.marginLeft = lt + "px";			
+			left = lt;					/* 完成定位时修改left的值 */
+		}
+		eprev.onclick = function(){					/* 测试俩个按钮是否捕捉的到 */
+			let prevgo = Math.floor(-left / 800) - 1; /* 获取当前位置，减去一，就是上一张*/
+			if (prevgo == -1){
+				prevgo = 3;
+			}
+			imgchange(prevgo);		/* 定位值的位置就是这张   输出prevgo 定位到这个的值 */
+		}
+		enext.onclick = function(){					/* 测试俩个按钮是否捕捉的到 */
+			let nextgo = Math.floor(-left / 800) + 1; /* 获取当前位置，加上一，就是下一张*/
+			if (nextgo == 4){
+				nextgo = 0;
+			}
+			imgchange(nextgo);		/* 定位值的位置就是这张   输出nextgo 定位到这个的值 */
+		}
+		function icochange(m){				/* 创建一个圆点跟随函数icochange */
+			for (let index = 0; index < esico.length; index++) {
+				esico[index].style.backgroundColor = '';				/* 通过for循环所有li元素背景色清空 */
+			}
+			if (m <esico.lenght) {								/* 当前图片所在的小圆点设置背景色为红色 */
+				esico[m].style.backgroundColor = 'red';
+			}
+		}
+		eicolist.onclick = function (){						/* 创建列表元素点击事件 */
+			var tg = event.target;
+			let ico = tg.innerHTML - 1;
+			imgchange(ico);
+			icochange(ico);
+		}
+		eimglist.onmouseover() = function () {		/* 鼠标在图片列表上时轮播停止，移开后又重新启动 */
+			clearTimeout(timer);
+		}
+		eimglist.onmouseout = function () {
+			run();
+		}
+	</script>
+</body>
+</html>
